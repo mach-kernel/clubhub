@@ -1,6 +1,10 @@
 Rails.application.routes.draw do
+
   root 'dashboard#index'
-  get 'dashboard/index'
+  
+  get 'users/new'
+  get 'dashboard/index', to: 'dashboard#index'
+  post 'users/create', to: 'users#create'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 0) do
+ActiveRecord::Schema.define(version: 20150403203436) do
 
   create_table "advisor", primary_key: "pid", force: :cascade do |t|
     t.string "phone", limit: 12
@@ -85,9 +85,11 @@ ActiveRecord::Schema.define(version: 0) do
   add_index "member_of", ["clubid"], name: "clubid", using: :btree
 
   create_table "person", primary_key: "pid", force: :cascade do |t|
-    t.string "passwd", limit: 32
-    t.string "fname",  limit: 50
-    t.string "lname",  limit: 100
+    t.string  "passwd",    limit: 32
+    t.string  "fname",     limit: 50
+    t.string  "lname",     limit: 100
+    t.boolean "clubadmin", limit: 1
+    t.boolean "superuser", limit: 1
   end
 
   create_table "role_in", id: false, force: :cascade do |t|
