@@ -5,6 +5,9 @@ Rails.application.routes.draw do
   get 'users/new'
   get 'dashboard/index', to: 'dashboard#index'
   post 'users/create', to: 'users#create'
+  get 'users/login', to: 'users#login'
+  post 'users/verify_login', to: 'users#verify_login'
+  get 'users/logout', to: 'users#logout'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

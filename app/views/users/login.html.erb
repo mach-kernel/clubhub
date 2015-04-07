@@ -1,0 +1,9 @@
+<div class="container">
+  <h1>Log In</h1>
+  <h4>(please we kind of worked hard on this or something like that)</h4>
+  <%= form_for(:logon, :url => {:controller => 'users', :action => 'verify_login'}) do |f| %>
+    <p> Username:</br> <%= f.text_field :pid, class: 'form-control' %></p>
+    <p> Password:</br> <%= f.password_field :passwd, class: 'form-control' %></p>
+    <%= f.submit "Log In", class: "btn btn-primary" %>
+  <% end %>
+</div>
