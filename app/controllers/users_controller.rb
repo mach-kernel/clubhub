@@ -12,7 +12,7 @@ class UsersController < ApplicationController
 			"INSERT INTO person (pid, passwd, fname, lname, clubadmin, superuser) VALUES ('#{person[:pid]}', '#{Digest::MD5.hexdigest(person[:passwd])}', '#{person[:fname]}', '#{person[:lname]}', false, false)")
 
 		# Log the user in
-		session[:person] = person
+		session[:person] = person.except!(:passwd)
 
 		flash[:notice] = "Your account has been successfully created, #{person[:fname]}!"
 		redirect_to '/'
@@ -28,7 +28,7 @@ class UsersController < ApplicationController
 
   def verify_login
     if params[:commit] == "Log In" and params.has_key?("logon")
-      user = Person.find_by_sql("SELECT * FROM person WHERE pid = '#{params[:logon][:pid]}' AND passwd = '#{Digest::MD5.hexdigest(params[:logon][:passwd])}'")
+      user = Person.find_by_sql("SELECT fname, lname, clubadmin, superuser, pid FROM person WHERE pid = '#{params[:logon][:pid]}' AND passwd = '#{Digest::MD5.hexdigest(params[:logon][:passwd])}'")
       if user.empty?
         flash[:error] = "I can't find your username and password and it's probably your fault."
         render "login"
