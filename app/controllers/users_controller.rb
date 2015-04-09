@@ -22,6 +22,29 @@ class UsersController < ApplicationController
   	end
   end
 
+  def edit
+    if params.has_key?("person")
+      person = params[:person]
+      user = Person.find_by_sql("SELECT * FROM person where pid = '#{person[:pid]}'").first
+
+      if params[:commit] == "Save"
+        # Update fields
+        user.clubadmin = person[:clubadmin]
+        user.superuser = person[:superuser]
+        unless person[:passwd].empty?
+          user.passwd = Digest::MD5.hexdigest(person[:passwd])
+        end 
+
+        user.save!
+        flash[:notice] = "Updated person #{person[:pid]} successfully!"
+      elsif params[:commit] == "Delete"
+        user.destroy!
+        flash[:error] = "Deleted #{person[:pid]} successfully! Very sad."
+      end
+      redirect_to '/dashboard/admin'
+    end
+  end
+
   def login
     render "login"
   end

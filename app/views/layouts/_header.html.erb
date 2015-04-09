@@ -25,6 +25,9 @@
             <%= link_to "Sign Up", {:action => "new", :controller => "users"}, :class => "btn btn-primary", :method => :get %>
           <% else -%>
             <a href="#">Signed in as: <span class="label label-primary"><%= "#{session[:person]['fname']} #{session[:person]['lname']}" %></span></a>
+            <% if validate_user == :superuser %>
+              <%= link_to "Admin Panel", {:action => "admin", :controller => "dashboard"}, :class => "btn btn-warning", :method => :get %>
+            <% end %>
             <%= link_to "Log Out", {:action => "logout", :controller => "users"}, :class => "btn btn-danger", :method => :get %>
           <% end -%>
         </div>
