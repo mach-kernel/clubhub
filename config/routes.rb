@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-
   root 'dashboard#index'
 
   # Dashboard routes
@@ -13,6 +12,11 @@ Rails.application.routes.draw do
   post 'users/verify_login', to: 'users#verify_login'
   get 'users/logout', to: 'users#logout'
   post 'users/edit', to: 'users#edit'
+
+  # Clubs routes
+  get 'clubs/index'
+  get 'clubs/new'
+  get 'clubs/edit'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

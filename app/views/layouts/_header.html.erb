@@ -8,11 +8,11 @@
     </div>
     <div class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        <li class="active">
+        <li class="<%= 'active' if current_page?(:controller => 'dashboard', :action => 'index')%>">
           <a href="/">Home</a>
         </li>
-        <li>
-          <a href="/clubs">Clubs</a>
+        <li class="<%= 'active' if current_page?(:controller => 'clubs', :action => 'index')%>">
+          <a href="/clubs/index">Clubs</a>
         </li>
         <li>
           <a href="/events">Events</a>

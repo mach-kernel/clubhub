@@ -1,0 +1,61 @@
+<div class="container">
+  <h1 class="page-header">Clubs</h1>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4>My Clubs</h4>
+        </div>
+        <div class="panel-body">
+          <table class="table table-condensed table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>Club Name</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Michael</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Jake</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <% if (validate_user == :clubadmin) || (validate_user == :superuser) -%>
+	      <div class="panel panel-default">
+	        <div class="panel-heading">
+	          <h4>Club Administration</h4>
+	        </div>
+	        <div class="panel-body">
+	          <a class="btn btn-block btn-primary">Add a new club</a>
+	          <a class="btn btn-block btn-primary">Manage existing clubs</a>
+	        </div>
+	      </div>
+      <% end %>
+    </div>
+    <div class="col-md-8">
+      <h3>Browse Clubs</h3>
+      <table class="table table-striped table-hover table-bordered">
+        <thead>
+          <tr>
+            <th>Club Name</th>
+            <th>Description</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Michael</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

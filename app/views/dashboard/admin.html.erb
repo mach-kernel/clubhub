@@ -1,0 +1,43 @@
+<div class="container">
+  <h1 class="page-header">Administrative Portal</h1>
+  <p><em>Exposing functionality end users shouldn't have since 1972.</em></p>
+  <h3>Manage Users</h3>
+  <p>To reset a password, type a new one in and hit save. I'm telling you this because you'll be doing this a lot. End users are "special".</p>
+  <p>Users are deleted without confirmation because best practices are overrated.</p>
+  <div class="row">
+    <table class="table table-striped table-bordered table-hover">
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Reset Password?</th>
+          <th>Club Admin</th>
+          <th>Superuser</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @all_users.each do |user| %>
+	        <tr>
+	          <%= form_for(:person, :url => {:controller => 'users', :action => 'edit'}) do |f| %>
+		          <td>
+			          <%= f.label :pid, user.pid %>
+			          <%= f.hidden_field :pid, :value => user.pid %>
+		          </td>
+		          <td><%= user.fname %></td>
+		          <td><%= user.lname %></td>
+		          <td><%= f.password_field :passwd, class: 'form-control' %></td>
+		          <td><%= f.check_box :clubadmin, { checked: user.clubadmin } %></td>
+		          <td><%= f.check_box :superuser, { checked: user.superuser } %></td>
+		          <td>
+		          	<%= f.submit "Save", class: "btn btn-primary" %>
+		          	<%= f.submit "Delete", class: "btn btn-danger" %>
+		          </td>
+		      <% end %>
+	        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
