@@ -1,2 +1,12 @@
-<h1>Clubs#new</h1>
-<p>Find me in app/views/clubs/new.html.erb</p>
+<div class="container">
+  <h1>New Club</h1>
+  <%= form_for(:club, :url => {:controller => 'clubs', :action => 'create'}) do |f| %>
+  	<p>Club Name:</br> <%= f.text_field :cname, class: 'form-control' %></p>
+    <p>Description:</br> <%= f.text_field :descr, class: 'form-control' %> </p>
+
+    <p>Topic Keywords:</br> 
+    <p>Separate your keywords/topics by a comma. Your topic/keyword can consist of multiple words, however, the software's heuristics will treat each comma-seperated block as an individual topic as it pertains to your club.</p>
+    <%= f.text_field :topics, class: 'form-control' %> </p>
+    <%= f.submit "Create", class: "btn btn-primary" %>
+  <% end %>
+</div>

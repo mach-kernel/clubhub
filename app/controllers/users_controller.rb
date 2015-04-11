@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   def new
-  	render "new"
+    render "new"
   end
 
   # This actually adds the users to the db
@@ -11,13 +11,16 @@ class UsersController < ApplicationController
 		ActiveRecord::Base.connection.execute(
 			"INSERT INTO person (pid, passwd, fname, lname, clubadmin, superuser) VALUES ('#{person[:pid]}', '#{Digest::MD5.hexdigest(person[:passwd])}', '#{person[:fname]}', '#{person[:lname]}', false, false)")
 
+    ActiveRecord::Base.connection.execute(
+      "INSERT INTO student (pid, gender, class) VALUES ('#{person[:pid]}', #{person[:gender]}', '#{person[:class]}')")
+
 		# Log the user in
 		session[:person] = person.except!(:passwd)
 
 		flash[:notice] = "Your account has been successfully created, #{person[:fname]}!"
 		redirect_to '/'
   	else
-  		flash.now[:notice] = "Something went wrong. Try again?"
+  		flash.now[:error] = "Something went wrong. Try again?"
   		render "new"
   	end
   end

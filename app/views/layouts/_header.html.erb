@@ -22,7 +22,7 @@
         <div class="navbar-form">
           <% if validate_user == :not_logged_in -%>
             <%= link_to "Log In", {:action => "login", :controller => "users"}, :class => "btn btn-success", :method => :get %>
-            <%= link_to "Sign Up", {:action => "new", :controller => "users"}, :class => "btn btn-primary", :method => :get %>
+            <%= link_to "Student Sign Up", {:action => "new", :controller => "users"}, :class => "btn btn-primary", :method => :get %>
           <% else -%>
             <a href="#">Signed in as: <span class="label label-primary"><%= "#{session[:person]['fname']} #{session[:person]['lname']}" %></span></a>
             <% if validate_user == :superuser %>
