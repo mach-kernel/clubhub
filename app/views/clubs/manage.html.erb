@@ -1,2 +1,33 @@
-<h1>Clubs#edit</h1>
-<p>Find me in app/views/clubs/edit.html.erb</p>
+<div class="container">
+  <h1 class="page-header">Club Administrative Portal</h1>
+  <p><em>Exposing functionality end users shouldn't have since 1972.</em></p>
+  <h3>Manage Clubs</h3>
+  <p>To edit a club's attributes, just edit the textbox. Placeholder text shows current value, if any. </p>
+  <div class="row">
+    <table class="table table-striped table-bordered table-hover">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @all_clubs.each do |club| %>
+	        <tr>
+	          <%= form_for(:club, :url => {:controller => 'clubs', :action => 'edit'}) do |f| %>
+		          <td>
+			          <%= f.hidden_field :clubid, :value => club.clubid %>
+			          <%= f.text_field :cname, :placeholder => club.cname, class: 'form-control' %>
+		          </td>
+		          <td><%= f.text_field :descr, :placeholder => club.descr, class: 'form-control' %></td>
+		          <td>
+		          	<%= f.submit "Save", class: "btn btn-primary" %>
+		          </td>
+		      <% end %>
+	        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

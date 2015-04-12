@@ -24,7 +24,11 @@
                     <%= f.hidden_field :pid, :value => student.pid %>
                   </td>
                   <td><%= student.role %></td>
-                  <td><%= f.submit "Drop", class: "btn btn-danger btn-xs" %></td>
+                  <td>
+                  <% if validate_user == :clubadmin || validate_user == :superuser -%>
+                    <%= f.submit "Drop", class: "btn btn-danger btn-xs" %>
+                  <% end -%>
+                </td>
                 </tr>
                 <% end %>
               <% end %>
@@ -63,7 +67,11 @@
                   <%= "#{advisor.fname} #{advisor.lname}" %>
                   <%= f.hidden_field :pid, :value => advisor.pid %>
                 </td>
-                <td><%= f.submit "Drop", class: "btn btn-danger btn-xs" %></td>
+                <td>
+                  <% if validate_user == :clubadmin || validate_user == :superuser -%>
+                    <%= f.submit "Drop", class: "btn btn-danger btn-xs" %>
+                  <% end -%>
+                </td>
               </tr>
               <% end %>
               <% end %>

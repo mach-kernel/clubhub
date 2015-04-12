@@ -160,6 +160,30 @@ class ClubsController < ApplicationController
     end
   end
 
+  def manage
+    @all_clubs = Club.find_by_sql("SELECT * FROM club")
+  end
+
   def edit
+    if validate_user != :superuser && validate_user != :clubadmin
+      flash[:error] = "You are not clever at all."
+      redirect_to "/"
+    else
+      club = params[:club]
+      editedclub = Club.find_by_sql("SELECT * from club WHERE clubid = '#{club[:clubid]}'").first
+
+      unless club[:cname].empty? 
+        editedclub.cname = club[:cname]
+      end
+
+      unless club[:descr].empty?
+        editedclub.descr = club[:descr]
+      end
+
+      editedclub.save!
+
+      flash[:notice] = "Club edited!"
+      redirect_to "/clubs/manage"
+    end
   end
 end
