@@ -20,9 +20,17 @@ class ClubsController < ApplicationController
     end
     @club = Club.find_by_sql("SELECT * FROM club WHERE clubid = #{params[:id]}").first
 
-    # Only students are "member_of" a club
     @students = Person.find_by_sql("SELECT * FROM person WHERE pid IN (SELECT pid from member_of WHERE clubid = '#{@club.clubid}')")
+    
+    # This sucks but I don't want to tokenize a large query string and I won't get fired for doing this so why not
+    @students.each do |student|
+      student.role = Role_in.find_by_sql("SELECT * FROM role_in WHERE pid = '#{student.pid}' AND clubid = '#{params[:id]}'").first.role
+    end
+
     @advisors = Person.find_by_sql("SELECT * FROM person WHERE pid IN (SELECT pid from advisor_of WHERE clubid = '#{@club.clubid}')")
+
+    @public_comments = Comment.find_by_sql("SELECT * FROM comment WHERE comment_id IN (SELECT comment_id FROM club_comment WHERE clubid = '#{@club.clubid}') AND is_public_c = 1")
+    @all_comments = Comment.find_by_sql("SELECT * FROM comment WHERE comment_id IN (SELECT comment_id FROM club_comment WHERE clubid = '#{@club.clubid}')")
   end
 
   # Professor, I know you want a query here but it is a massive pain
@@ -72,6 +80,84 @@ class ClubsController < ApplicationController
     ActiveRecord::Base.connection.execute("INSERT INTO club_comment (comment_id, clubid) VALUES ('#{newcomment.comment_id}', '#{params[:id]}')")
     flash[:notice] = "Your comment has been successfully submitted."
     redirect_to "/clubs/hub/#{params[:id]}"
+  end
+
+  def add_students
+    unless params[:id]
+      flash[:error] = "You have arrived here in error. It's probably your fault."
+      redirect_to '/clubs/index'
+    end
+
+    student = params[:student]
+
+    check_students = Person.find_by_sql("SELECT * from person WHERE pid IN (SELECT pid FROM student WHERE pid = '#{student[:pid]}')")
+
+    if check_students.length < 1
+      flash[:error] = "Username not found. Try again."
+      redirect_to "/clubs/hub/#{params[:id]}"
+    else
+      ActiveRecord::Base.connection.execute("INSERT INTO member_of (pid, clubid) VALUES ('#{student[:pid]}', '#{params[:id]}') ")
+      ActiveRecord::Base.connection.execute("INSERT INTO role_in (pid, clubid, role) VALUES ('#{student[:pid]}', '#{params[:id]}', '#{student[:role]}') ")
+
+      flash[:notice] = "Student added successfully!"
+      redirect_to "/clubs/hub/#{params[:id]}"
+    end
+  end
+
+  def add_advisors
+    unless params[:id]
+      flash[:error] = "You have arrived here in error. It's probably your fault."
+      redirect_to '/clubs/index'
+    end
+
+    advisor = params[:advisor]
+    
+    check_advisors = Person.find_by_sql("SELECT * from person WHERE pid IN (SELECT pid FROM advisor WHERE pid = '#{student[:pid]}')")
+
+    if check_students.length < 1
+      flash[:error] = "Username not found. Try again."
+      redirect_to "/clubs/hub/#{params[:id]}"
+    else
+      ActiveRecord::Base.connection.execute("INSERT INTO advisor_of (pid, clubid) VALUES ('#{student[:pid]}', '#{params[:id]}') ")
+
+      flash[:notice] = "Advisor added successfully!"
+      redirect_to "/clubs/hub/#{params[:id]}"
+    end
+  end
+
+  def drop_students
+    unless params[:id]
+      flash[:error] = "You have arrived here in error. It's probably your fault."
+      redirect_to '/clubs/index'
+    end
+    if validate_user != :superuser && validate_user != :clubadmin
+      flash[:error] = "You are not clever at all."
+      redirect_to "/clubs/hub/#{params[:id]}"
+    else
+      student = params[:student]
+      ActiveRecord::Base.connection.execute("DELETE FROM role_in WHERE pid = '#{student[:pid]}' AND clubid = '#{params[:id]}'")
+      ActiveRecord::Base.connection.execute("DELETE FROM member_of WHERE pid = '#{student[:pid]}' AND clubid = '#{params[:id]}'")
+      flash[:error] = "Student dropped!"
+
+      redirect_to "/clubs/hub/#{params[:id]}"
+    end
+  end
+
+  def drop_advisors
+    unless params[:id]
+      flash[:error] = "You have arrived here in error. It's probably your fault."
+      redirect_to '/clubs/index'
+    end
+    if validate_user != :superuser && validate_user != :clubadmin
+      flash[:error] = "You are not clever at all."
+      redirect_to "/clubs/hub/#{params[:id]}"
+    else
+      advisor = params[:advisor]
+      ActiveRecord::Base.connection.execute("DELETE FROM advisor_of WHERE pid = '#{advisor[:pid]}' AND clubid = '#{params[:id]}'")
+      flash[:error] = "Advisor dropped!"
+
+      redirect_to "/clubs/hub/#{params[:id]}"
+    end
   end
 
   def edit

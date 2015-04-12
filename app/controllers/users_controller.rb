@@ -1,10 +1,10 @@
 class UsersController < ApplicationController
-  def new
-    render "new"
+  def new_student
+    render "new_student"
   end
 
   # This actually adds the users to the db
-  def create
+  def create_student
   	if params[:commit] == "Register" and params.has_key?("person")
 		
 		person = params[:person]
@@ -12,7 +12,7 @@ class UsersController < ApplicationController
 			"INSERT INTO person (pid, passwd, fname, lname, clubadmin, superuser) VALUES ('#{person[:pid]}', '#{Digest::MD5.hexdigest(person[:passwd])}', '#{person[:fname]}', '#{person[:lname]}', false, false)")
 
     ActiveRecord::Base.connection.execute(
-      "INSERT INTO student (pid, gender, class) VALUES ('#{person[:pid]}', #{person[:gender]}', '#{person[:class]}')")
+      "INSERT INTO student (pid, gender, class) VALUES ('#{person[:pid]}', '#{person[:gender]}', '#{person[:class]}')")
 
 		# Log the user in
 		session[:person] = person.except!(:passwd)
@@ -25,7 +25,32 @@ class UsersController < ApplicationController
   	end
   end
 
+  def create_advisor
+    if params[:commit] == "Register" and params.has_key?("person")
+    
+    person = params[:person]
+    ActiveRecord::Base.connection.execute(
+      "INSERT INTO person (pid, passwd, fname, lname, clubadmin, superuser) VALUES ('#{person[:pid]}', '#{Digest::MD5.hexdigest(person[:passwd])}', '#{person[:fname]}', '#{person[:lname]}', false, false)")
+
+    ActiveRecord::Base.connection.execute(
+      "INSERT INTO advisor (pid, phone) VALUES ('#{person[:pid]}', '#{person[:phone]}')")
+
+    # Log the user in
+    session[:person] = person.except!(:passwd)
+
+    flash[:notice] = "Your account has been successfully created, #{person[:fname]}!"
+    redirect_to '/'
+    else
+      flash.now[:error] = "Something went wrong. Try again?"
+      render "new"
+    end
+  end
+
   def edit
+    if validate_user != :superuser
+      flash[:error] = "You are not clever at all."
+      redirect_to '/'
+    end
     if params.has_key?("person")
       person = params[:person]
       user = Person.find_by_sql("SELECT * FROM person where pid = '#{person[:pid]}'").first

@@ -11,18 +11,36 @@
             <thead>
               <tr>
                 <th>Student Name</th>
+                <th>Role</th>
                 <th></th>
               </tr>
             </thead>
             <tbody>
               <% @students.each do |student| %>
-              <tr>
-                <td><%= "#{student.fname} #{student.lname}" %></td>
-                <td>fhfgd</td>
-              </tr>
+                <%= form_for(:student, :url => {:controller => 'clubs', :action => 'drop_students'}) do |f| %>
+                <tr>
+                  <td>
+                    <%= "#{student.fname} #{student.lname}" %>
+                    <%= f.hidden_field :pid, :value => student.pid %>
+                  </td>
+                  <td><%= student.role %></td>
+                  <td><%= f.submit "Drop", class: "btn btn-danger btn-xs" %></td>
+                </tr>
+                <% end %>
               <% end %>
             </tbody>
           </table>
+            <% if validate_user == :clubadmin || validate_user == :superuser -%>
+            <hr />
+            <label class="control-label">Add student by username:</label>
+            <%= form_for(:student, :url => {:controller => 'clubs', :action => 'add_students'}) do |f| %>
+              <%= f.text_field :pid, :placeholder => 'Username', class: 'form-control' %>
+              <br />
+              <%= f.text_field :role, :placeholder => 'Role', class: 'form-control' %>
+              <br />
+              <%= f.submit "Add", class: "btn btn-primary" %>
+            <% end %>   
+          <% end -%>    
         </div>
       </div>
       <div class="panel panel-info">
@@ -39,13 +57,28 @@
             </thead>
             <tbody>
               <% @advisors.each do |advisor| %>
+              <%= form_for(:advisor, :url => {:controller => 'clubs', :action => 'drop_advisor'}) do |f| %>
               <tr>
-                <td><%= "#{advisor.fname} #{advisor.lname}" %></td>
-                <td>fhfgd</td>
+                <td>
+                  <%= "#{advisor.fname} #{advisor.lname}" %>
+                  <%= f.hidden_field :pid, :value => advisor.pid %>
+                </td>
+                <td><%= f.submit "Drop", class: "btn btn-danger btn-xs" %></td>
               </tr>
               <% end %>
+              <% end %>
             </tbody>
-          </table>        </div>
+          </table>
+          <% if validate_user == :clubadmin || validate_user == :superuser -%>
+            <hr />
+            <label class="control-label">Add advisor by username:</label>
+            <%= form_for(:advisor, :url => {:controller => 'clubs', :action => 'add_advisors'}) do |f| %>
+              <%= f.text_field :pid, :placeholder => 'Username', class: 'form-control' %>
+              <br />
+              <%= f.submit "Add", class: "btn btn-primary" %>
+            <% end %>   
+          <% end -%>    
+        </div>
       </div>
     </div>
     <div class="col-md-9">
@@ -65,20 +98,25 @@
           <tr>
             <th>Username</th>
             <th>Comment</th>
-            <th>Public?</th>
-            <th>
-              <br></th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>1</td>
-            <td>Michael</td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>Jake</td>
-          </tr>
+          <% unless validate_user == :not_logged_in -%>
+              <% @all_comments.reverse_each do |comment| %>
+                <tr>
+                  <td><%= comment.commenter %></td>
+                  <td><%= comment.ctext %></td>
+                </tr>
+              <% end %>
+          <% else -%>
+              <% @public_comments.reverse_each do |comment| %>
+                <tr>
+                  <td><%= comment.commenter %></td>
+                  <td><%= comment.ctext %></td>
+                </tr>
+              <% end %>
+          <% end -%>
         </tbody>
       </table>
     </div>

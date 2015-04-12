@@ -1,0 +1,12 @@
+<div class="container">
+  <h1>Sign Up</h1>
+  <p>Fill in as much information as you would like.</p>
+  <%= form_for(:person, :url => {:controller => 'users', :action => 'create_advisor'}) do |f| %>
+  	<p> Username:</br> <%= f.text_field :pid, class: 'form-control' %></p>
+    <p> First Name:</br> <%= f.text_field :fname, class: 'form-control' %> </p>
+    <p> Last Name:</br> <%= f.text_field :lname, class: 'form-control' %> </p>
+    <p> Phone Number:</br> <%= f.text_field :phone, class: 'form-control' %> </p>
+    <p> Password:</br> <%= f.password_field :passwd, class: 'form-control' %></p>
+    <%= f.submit "Register", class: "btn btn-primary" %>
+  <% end %>
+</div>

@@ -6,8 +6,10 @@ Rails.application.routes.draw do
   get 'dashboard/admin', to: 'dashboard#admin'
 
   # Users routes
-  get 'users/new'
-  post 'users/create', to: 'users#create'
+  get 'users/new_student'
+  get 'users/new_advisor'
+  post 'users/create_student', to: 'users#create_student'
+  post 'users/create_advisor', to: 'users#create_advisor'
   get 'users/login', to: 'users#login'
   post 'users/verify_login', to: 'users#verify_login'
   get 'users/logout', to: 'users#logout'
@@ -20,6 +22,10 @@ Rails.application.routes.draw do
   get 'clubs/manage'
   post 'clubs/create', to: 'clubs#create'
   post 'clubs/hub/:id/addcomment', to: 'clubs#addcomment'
+  post 'clubs/hub/:id/add_students', to: 'clubs#add_students'
+  post 'clubs/hub/:id/add_advisors', to: 'clubs#add_advisors'
+  post 'clubs/hub/:id/drop_students', to: 'clubs#drop_students'
+  post 'clubs/hub/:id/drop_advisors', to: 'clubs#drop_advisors'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
