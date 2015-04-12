@@ -1,7 +1,11 @@
 class ClubsController < ApplicationController
   def index
     @all_clubs = Club.find_by_sql("SELECT * FROM club")
-    @my_clubs = Club.find_by_sql("SELECT * FROM club WHERE clubid IN (SELECT clubid from member_of WHERE pid = '#{session[:person]['pid']}')")
+
+    unless validate_user == :not_logged_in
+      @my_clubs = Club.find_by_sql("SELECT * FROM club WHERE clubid IN (SELECT clubid from member_of WHERE pid = '#{session[:person]['pid']}')")
+    end
+
   	render "index"
   end
 
@@ -10,6 +14,15 @@ class ClubsController < ApplicationController
   end
 
   def hub
+    unless params[:id]
+      flash[:error] = "You have arrived here in error. It's probably your fault."
+      redirect_to '/clubs/index'
+    end
+    @club = Club.find_by_sql("SELECT * FROM club WHERE clubid = #{params[:id]}").first
+
+    # Only students are "member_of" a club
+    @students = Person.find_by_sql("SELECT * FROM person WHERE pid IN (SELECT pid from member_of WHERE clubid = '#{@club.clubid}')")
+    @advisors = Person.find_by_sql("SELECT * FROM person WHERE pid IN (SELECT pid from advisor_of WHERE clubid = '#{@club.clubid}')")
   end
 
   # Professor, I know you want a query here but it is a massive pain
@@ -40,6 +53,25 @@ class ClubsController < ApplicationController
   		flash.now[:error] = "Something went wrong. Try again?"
   		render "new"
   	end
+  end
+
+  def addcomment
+    unless params[:id]
+      flash[:error] = "You have arrived here in error. It's probably your fault."
+      redirect_to '/clubs/index'
+    end
+
+    comment = params[:club_comment]
+
+    newcomment = Comment.new
+    newcomment.commenter = validate_user == :not_logged_in ? "Anonymous" : session[:person]['pid']
+    newcomment.ctext = comment[:ctext]
+    newcomment.is_public_c = validate_user == :not_logged_in ? 1 : comment[:public]
+    newcomment.save!
+
+    ActiveRecord::Base.connection.execute("INSERT INTO club_comment (comment_id, clubid) VALUES ('#{newcomment.comment_id}', '#{params[:id]}')")
+    flash[:notice] = "Your comment has been successfully submitted."
+    redirect_to "/clubs/hub/#{params[:id]}"
   end
 
   def edit

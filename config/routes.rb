@@ -19,6 +19,7 @@ Rails.application.routes.draw do
   get 'clubs/new'
   get 'clubs/manage'
   post 'clubs/create', to: 'clubs#create'
+  post 'clubs/hub/:id/addcomment', to: 'clubs#addcomment'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
