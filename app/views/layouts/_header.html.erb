@@ -14,8 +14,8 @@
         <li class="<%= 'active' if current_page?(:controller => 'clubs')%>">
           <a href="/clubs/index">Clubs</a>
         </li>
-        <li>
-          <a href="/events">Events</a>
+        <li class="<%= 'active' if current_page?(:controller => 'events', :action => 'index')%>">
+          <a href="/events/index">Events</a>
         </li>
       </ul>  
       <ul class="nav navbar-nav navbar-right">

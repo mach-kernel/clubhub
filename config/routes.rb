@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+
   root 'dashboard#index'
 
   # Dashboard routes
@@ -27,6 +28,16 @@ Rails.application.routes.draw do
   post 'clubs/hub/:id/add_advisors', to: 'clubs#add_advisors'
   post 'clubs/hub/:id/drop_students', to: 'clubs#drop_students'
   post 'clubs/hub/:id/drop_advisors', to: 'clubs#drop_advisors'
+
+  # Events routes
+  get 'events/index'
+  get 'events/edit'
+  get 'events/:id/new', to: 'events#new'
+  get 'events/hub/:id', to: 'events#hub'
+  get 'events/manage'
+  post 'events/:id/create', to: 'events#create'
+  post 'events/hub/:id/addcomment', to: 'events#addcomment'
+  post 'events/:id/rsvp', to:'events#rsvp'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

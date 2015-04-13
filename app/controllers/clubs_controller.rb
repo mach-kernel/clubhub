@@ -1,4 +1,14 @@
 class ClubsController < ApplicationController
+
+  helper_method :local_club_admin
+
+  # casecmp compares non case-sensitively
+  # ruby does not require the 'return' keyword
+  def local_club_admin?
+    role = Role_in.find_by_sql("SELECT * FROM role_in WHERE pid = '#{session[:person]['pid']}' AND clubid = '#{params[:id]}'").first.role
+    role.casecmp("admin")
+  end
+
   def index
     @all_clubs = Club.find_by_sql("SELECT * FROM club")
 
@@ -26,6 +36,8 @@ class ClubsController < ApplicationController
     @students.each do |student|
       student.role = Role_in.find_by_sql("SELECT * FROM role_in WHERE pid = '#{student.pid}' AND clubid = '#{params[:id]}'").first.role
     end
+
+    @club_events = Event.find_by_sql("SELECT * FROM event WHERE sponsored_by = '#{params[:id]}'")
 
     @advisors = Person.find_by_sql("SELECT * FROM person WHERE pid IN (SELECT pid from advisor_of WHERE clubid = '#{@club.clubid}')")
 
@@ -72,9 +84,9 @@ class ClubsController < ApplicationController
     comment = params[:club_comment]
 
     newcomment = Comment.new
-    newcomment.commenter = validate_user == :not_logged_in ? "Anonymous" : session[:person]['pid']
+    newcomment.commenter = session[:person]['pid']
     newcomment.ctext = comment[:ctext]
-    newcomment.is_public_c = validate_user == :not_logged_in ? 1 : comment[:public]
+    newcomment.is_public_c = comment[:public]
     newcomment.save!
 
     ActiveRecord::Base.connection.execute("INSERT INTO club_comment (comment_id, clubid) VALUES ('#{newcomment.comment_id}', '#{params[:id]}')")
@@ -130,7 +142,7 @@ class ClubsController < ApplicationController
       flash[:error] = "You have arrived here in error. It's probably your fault."
       redirect_to '/clubs/index'
     end
-    if validate_user != :superuser && validate_user != :clubadmin
+    if validate_user != :superuser && validate_user != :clubadmin && local_club_admin?
       flash[:error] = "You are not clever at all."
       redirect_to "/clubs/hub/#{params[:id]}"
     else
@@ -148,7 +160,7 @@ class ClubsController < ApplicationController
       flash[:error] = "You have arrived here in error. It's probably your fault."
       redirect_to '/clubs/index'
     end
-    if validate_user != :superuser && validate_user != :clubadmin
+    if validate_user != :superuser && validate_user != :clubadmin && local_club_admin?
       flash[:error] = "You are not clever at all."
       redirect_to "/clubs/hub/#{params[:id]}"
     else
@@ -165,7 +177,7 @@ class ClubsController < ApplicationController
   end
 
   def edit
-    if validate_user != :superuser && validate_user != :clubadmin
+    if validate_user != :superuser && validate_user != :clubadmin && local_club_admin?
       flash[:error] = "You are not clever at all."
       redirect_to "/"
     else

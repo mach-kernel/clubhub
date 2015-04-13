@@ -1,0 +1,77 @@
+<div class="container">
+  <h1 class="page-header"><%= @event.ename %></h1>
+  <div class="row">
+    <div class="col-md-3">
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <h4>Students RSVP'd</h4>
+        </div>
+        <div class="panel-body">
+          <table class="table table-condensed table-bordered table-striped">
+            <thead>
+              <tr>
+                <th>Student Name</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @attending.each do |student| %>
+                <%= form_for(:student, :url => {:controller => 'clubs', :action => 'drop_students'}) do |f| %>
+                <tr>
+                  <td>
+                    <%= "#{student.fname} #{student.lname}" %>
+                    <%= f.hidden_field :pid, :value => student.pid %>
+                  </td>
+                  <td>
+                  <% if validate_user == :clubadmin || validate_user == :superuser || local_club_admin? -%>
+                    <%= f.submit "Drop", class: "btn btn-danger btn-xs" %>
+                  <% end -%>
+                </td>
+                </tr>
+                <% end %>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      </div>
+    <div class="col-md-9">
+      <h3 class="page-header">Forum</h3>
+      <% unless validate_user == :not_logged_in -%>
+        <h4>Add a comment</h4>
+        <%= form_for(:event_comment, :url => {:controller => 'events', :action => 'addcomment'}) do |f| %>
+        <%= f.text_area :ctext, class: 'form-control' %>
+          <br />
+          <p>Public comment?: <%= f.check_box :public %></p>
+        <%= f.submit "Submit", class: "btn btn-primary" %>
+        <% end %>
+        <hr>
+      <% end -%>
+      <table class="table table-striped table-hover table-bordered">
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Comment</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% unless validate_user == :not_logged_in -%>
+              <% @all_comments.reverse_each do |comment| %>
+                <tr>
+                  <td><%= comment.commenter %></td>
+                  <td><%= comment.ctext %></td>
+                </tr>
+              <% end %>
+          <% else -%>
+              <% @public_comments.reverse_each do |comment| %>
+                <tr>
+                  <td><%= comment.commenter %></td>
+                  <td><%= comment.ctext %></td>
+                </tr>
+              <% end %>
+          <% end -%>
+        </tbody>
+      </table>
+    </div>
+</div>

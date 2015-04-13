@@ -1,0 +1,14 @@
+<%= javascript_include_tag "application" %>
+<%= stylesheet_link_tag    "application" %>
+
+<div class="container relative">
+  <h1>New Event</h1>
+  <%= form_for(:event, :url => {:controller => 'events', :action => 'create'}) do |f| %>
+  	<p>Name:</br> <%= f.text_field :ename, class: 'form-control' %></p>
+    <p>Description:</br> <%= f.text_field :description, class: 'form-control' %> </p>
+    <p>Date/Time:</br> <%= f.text_field :edatetime, class: 'form-control datetimepicker' %> </p>
+    <p>Location:</br> <%= f.text_field :location, class: 'form-control' %> </p>
+    <p>Public event?: <%= f.check_box :public %></p>
+    <%= f.submit "Create", class: "btn btn-primary" %>
+  <% end %>
+</div>

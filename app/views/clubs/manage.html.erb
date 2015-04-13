@@ -18,9 +18,9 @@
 	          <%= form_for(:club, :url => {:controller => 'clubs', :action => 'edit'}) do |f| %>
 		          <td>
 			          <%= f.hidden_field :clubid, :value => club.clubid %>
-			          <%= f.text_field :cname, :placeholder => club.cname, class: 'form-control' %>
+			          <%= f.text_field :cname, :value => club.cname, class: 'form-control' %>
 		          </td>
-		          <td><%= f.text_field :descr, :placeholder => club.descr, class: 'form-control' %></td>
+		          <td><%= f.text_field :descr, :value => club.descr, class: 'form-control' %></td>
 		          <td>
 		          	<%= f.submit "Save", class: "btn btn-primary" %>
 		          </td>
