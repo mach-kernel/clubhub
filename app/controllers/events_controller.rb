@@ -3,11 +3,19 @@ class EventsController < ApplicationController
   	@all_events = Event.find_by_sql("SELECT * FROM event")
 
   	unless validate_user == :not_logged_in
-      @my_events = Club.find_by_sql("SELECT * FROM event WHERE eid IN (SELECT eid from sign_up WHERE pid = '#{session[:person]['pid']}')")
+      @my_events = Event.find_by_sql("SELECT * FROM event WHERE eid IN (SELECT eid from sign_up WHERE pid = '#{session[:person]['pid']}')")
     end
   end
 
   def new
+  end
+
+  def manage
+    unless params[:id]
+      flash[:error] = "You have arrived here in error. It's probably your fault."
+      redirect_to '/clubs/index'
+    end
+    @club_events = Event.find_by_sql("SELECT * FROM event WHERE sponsored_by = '#{params[:id]}'")
   end
 
   def hub
@@ -31,7 +39,7 @@ class EventsController < ApplicationController
       newevent = Event.new
       newevent.ename = event[:ename]
       newevent.description = event[:description]
-      newevent.edatetime = event[:edatetime]
+      newevent.edatetime = event[:edatetime].to_s(:db)
       newevent.location = event[:location]
       newevent.is_public_e = event[:public]
       newevet.sponsored_by = params[:id]
@@ -65,10 +73,27 @@ class EventsController < ApplicationController
   end
 
   def rsvp
-    unless params[:id]
+    unless params[:id] or validate_user == :not_logged_in
       flash[:error] = "You have arrived here in error. It's probably your fault."
       redirect_to '/events/index'
     end
+
+    ActiveRecord::Base.connection.execute("INSERT INTO sign_up (pid, eid) VALUES ('#{session[:person]['pid']}', '#{params[:id]}')")
+
+    flash[:notice] = "You have successfully RSVP'd to the event."
+    redirect_to "/events/index"
+  end
+
+  def leave
+    unless params[:id] or validate_user == :not_logged_in
+      flash[:error] = "You have arrived here in error. It's probably your fault."
+      redirect_to '/events/index'
+    end
+
+    ActiveRecord::Base.connection.execute("DELETE FROM sign_up WHERE pid = '#{session[:person]['pid']}' AND eid = '#{params[:id]}'")
+
+    flash[:notice] = "You have successfully left the event."
+    redirect_to '/events/index'
   end
 
   def edit

@@ -1,14 +1,5 @@
 class ClubsController < ApplicationController
 
-  helper_method :local_club_admin
-
-  # casecmp compares non case-sensitively
-  # ruby does not require the 'return' keyword
-  def local_club_admin?
-    role = Role_in.find_by_sql("SELECT * FROM role_in WHERE pid = '#{session[:person]['pid']}' AND clubid = '#{params[:id]}'").first.role
-    role.casecmp("admin")
-  end
-
   def index
     @all_clubs = Club.find_by_sql("SELECT * FROM club")
 

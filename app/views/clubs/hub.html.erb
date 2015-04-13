@@ -99,7 +99,6 @@
             <th>When</th>
             <th>Where?</th>
             <th>Public?</th>
-            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -115,6 +114,9 @@
         </tbody>
       </table>
       <%= link_to "Create Event", {:action => "new", :controller => "events"}, :class => "btn btn-primary", :method => :get %>
+      <% if validate_user == :clubadmin or validate_user == :superuser or local_club_admin? -%>
+        <%= link_to "Edit Events", {:action => "manage", :controller => "events", :id => @club.clubid}, :class => "btn btn-warning", :method => :get %>  
+      <% end -%>
       <h3 class="page-header">Forum</h3>
       <% unless validate_user == :not_logged_in -%>
         <h4>Add a comment</h4>

@@ -15,7 +15,6 @@
                 <th>Description</th>
                 <th>When</th>
                 <th>Where?</th>
-                <th>Public?</th>
                 <th></th>
               </tr>
             </thead>
@@ -26,8 +25,7 @@
                 <td><%= event.description %></td>
                 <td><%= event.edatetime %></td>
                 <td><%= event.location %></td>
-                <td><%= event.is_public_e %></td>
-                <td><%= link_to "Visit Hub", {:action => "hub", :controller => "events", :id => event.eid}, :class => "btn btn-xs btn-success", :method => :get %></td>
+                <td><%= link_to "Visit Hub", {:action => "hub", :controller => "events", :id => event.eid}, :class => "btn btn-xs btn-success", :method => :get %><br /><br /><%= link_to "Leave", {:action => "leave", :controller => "events", :id => event.eid}, :class => "btn btn-xs btn-success", :method => :get %></td>
                 </tr>
               <% end %>
             </tbody>
@@ -57,7 +55,7 @@
                 <td><%= event.edatetime %></td>
                 <td><%= event.location %></td>
                 <td><%= event.is_public_e %></td>
-                <td><%= link_to "Visit Hub", {:action => "hub", :controller => "events", :id => event.eid}, :class => "btn btn-xs btn-success", :method => :get %></td>
+                <td><%= link_to "Visit Hub", {:action => "hub", :controller => "events", :id => event.eid}, :class => "btn btn-xs btn-success", :method => :get %><br /><br /><%= link_to "RSVP", {:action => "rsvp", :controller => "events", :id => event.eid}, :class => "btn btn-xs btn-success", :method => :get %></td>
                 </tr>
           <% end %>
         </tbody>

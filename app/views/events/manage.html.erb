@@ -1,0 +1,42 @@
+<%= javascript_include_tag "application" %>
+<%= stylesheet_link_tag    "application" %>
+
+<div class="container relative">
+  <h1 class="page-header">Event Administrative Portal</h1>
+  <p><em>Exposing functionality end users shouldn't have since 1972.</em></p>
+  <h3>Manage Your Events</h3>
+  <p>You're probably here because your HR department recently spoke to you in an unassuming, apathetic, and passively aggressive tone. Maybe a "butt themed" parade isn't a good idea.</p>
+  <div class="row">
+    <table class="table table-striped table-bordered table-hover">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Date/Time</th>
+          <th>Where?</th>
+          <th>Public?</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @club_events.each do |event| %>
+	        <tr>
+	          <%= form_for(:event, :url => {:controller => 'events', :action => 'edit'}) do |f| %>
+		          <td>
+			          <%= f.hidden_field :eid, :value => event.eid %>
+			          <%= f.text_field :ename, :value => event.ename, class: 'form-control' %>
+		          </td>
+		          <td><%= f.text_field :description, :value => event.description, class: 'form-control' %></td>
+		          <td><%= f.text_field :edatetime, :value => event.edatetime, class: 'form-control datetimepicker' %></td>
+		          <td><%= f.text_field :location, :value => event.location, class: 'form-control' %></td>
+		          <td><%= f.check_box :public, :value => event.is_public_e %></td>		       
+		          <td>
+		          	<%= f.submit "Save", class: "btn btn-primary" %>
+		          </td>
+		      <% end %>
+	        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

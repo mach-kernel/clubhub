@@ -31,13 +31,16 @@ Rails.application.routes.draw do
 
   # Events routes
   get 'events/index'
-  get 'events/edit'
+  post 'events/edit', to: 'events#edit'
+  get 'events/manage'
   get 'events/:id/new', to: 'events#new'
   get 'events/hub/:id', to: 'events#hub'
-  get 'events/manage'
+  get 'events/:id/manage', to: 'events#manage'
   post 'events/:id/create', to: 'events#create'
   post 'events/hub/:id/addcomment', to: 'events#addcomment'
-  post 'events/:id/rsvp', to:'events#rsvp'
+  get 'events/:id/rsvp', to:'events#rsvp'
+  get 'events/:id/leave', to:'events#leave'
+
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
