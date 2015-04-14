@@ -1,41 +1,34 @@
 <div class="container">
   <h1 class="page-header">Events</h1>
   <div class="row">
-    <div class="col-md-4">
     <% unless validate_user == :not_logged_in -%>
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h4>RSVP'd events</h4>
-        </div>
-        <div class="panel-body">
-          <table class="table table-condensed table-bordered table-striped">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Description</th>
-                <th>When</th>
-                <th>Where?</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              <% @my_events.each do |event| %>
-                <tr>
-                <td><%= event.ename %></td>
-                <td><%= event.description %></td>
-                <td><%= event.edatetime %></td>
-                <td><%= event.location %></td>
-                <td><%= link_to "Visit Hub", {:action => "hub", :controller => "events", :id => event.eid}, :class => "btn btn-xs btn-success", :method => :get %><br /><br /><%= link_to "Leave", {:action => "leave", :controller => "events", :id => event.eid}, :class => "btn btn-xs btn-success", :method => :get %></td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
-        </div>
-      </div>
+    <h3 class="page-header">My Events</h3>
+      <table class="table table-condensed table-bordered table-striped">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>When</th>
+            <th>Where?</th>
+            <th>Public?</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @my_events.each do |event| %>
+            <tr>
+            <td><%= event.ename %></td>
+            <td><%= event.description %></td>
+            <td><%= event.edatetime %></td>
+            <td><%= event.location %></td>
+            <td><%= event.is_public_e %></td>
+            <td><%= link_to "Visit Hub", {:action => "hub", :controller => "events", :id => event.eid}, :class => "btn btn-xs btn-success", :method => :get %> <%= link_to "Leave", {:action => "leave", :controller => "events", :id => event.eid}, :class => "btn btn-xs btn-danger", :method => :get %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
     <% end -%>
-    </div>
-    <div class="col-md-8">
-      <h3>Browse Events</h3>
+      <h3 class="page-header">Events I am not attending</h3>
       <table class="table table-condensed table-bordered table-striped">
         <thead>
           <tr>
@@ -43,23 +36,22 @@
               <th>Description</th>
               <th>When</th>
               <th>Where?</th>
-              <th>Public?</th>
               <th></th>
           </tr>
         </thead>
         <tbody>
           <% @all_events.each do |event| %>
+              <% if event.is_public_e -%>
                 <tr>
                 <td><%= event.ename %></td>
                 <td><%= event.description %></td>
                 <td><%= event.edatetime %></td>
                 <td><%= event.location %></td>
-                <td><%= event.is_public_e %></td>
-                <td><%= link_to "Visit Hub", {:action => "hub", :controller => "events", :id => event.eid}, :class => "btn btn-xs btn-success", :method => :get %><br /><br /><%= link_to "RSVP", {:action => "rsvp", :controller => "events", :id => event.eid}, :class => "btn btn-xs btn-success", :method => :get %></td>
+                <td><%= link_to "Visit Hub", {:action => "hub", :controller => "events", :id => event.eid}, :class => "btn btn-xs btn-success", :method => :get %> <%= link_to "RSVP", {:action => "rsvp", :controller => "events", :id => event.eid}, :class => "btn btn-xs btn-primary", :method => :get %></td>
                 </tr>
+              <% end -%>
           <% end %>
         </tbody>
       </table>
-    </div>
   </div>
 </div>

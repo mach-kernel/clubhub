@@ -1,6 +1,6 @@
 class EventsController < ApplicationController
   def index
-  	@all_events = Event.find_by_sql("SELECT * FROM event")
+  	@all_events = Event.find_by_sql("SELECT * FROM event WHERE eid NOT IN (SELECT eid from sign_up WHERE pid = '#{session[:person]['pid']}')")
 
   	unless validate_user == :not_logged_in
       @my_events = Event.find_by_sql("SELECT * FROM event WHERE eid IN (SELECT eid from sign_up WHERE pid = '#{session[:person]['pid']}')")
@@ -39,10 +39,10 @@ class EventsController < ApplicationController
       newevent = Event.new
       newevent.ename = event[:ename]
       newevent.description = event[:description]
-      newevent.edatetime = event[:edatetime].to_s(:db)
+      newevent.edatetime = Date.strptime(event[:edatetime], '%m/%d/%Y %I:%M %p')
       newevent.location = event[:location]
       newevent.is_public_e = event[:public]
-      newevet.sponsored_by = params[:id]
+      newevent.sponsored_by = params[:id]
       newevent.save!
 
       flash[:notice] = "The #{event[:ename]} event has been created."
@@ -97,5 +97,30 @@ class EventsController < ApplicationController
   end
 
   def edit
+    if validate_user != :superuser && validate_user != :clubadmin && local_club_admin?
+      flash[:error] = "You are not clever at all."
+      redirect_to "/"
+    else
+      event = params[:event]
+      editedevent = Event.find_by_sql("SELECT * FROM event WHERE eid = '#{event[:eid]}'").first
+
+      unless event[:description].empty?
+        editedevent.description = event[:description]
+      end
+
+      unless event[:edatetime].empty?
+        editedevent.edatetime = Date.strptime(event[:edatetime], '%m/%d/%Y %I:%M %p')
+      end
+
+      unless event[:location].empty?
+        editedevent.location =  event[:location]
+      end
+
+      editedevent.is_public_e = event[:public]
+      editedevent.save!
+
+      flash[:notice] = "Event edited successfully!"
+      redirect_to "/clubs/hub/#{params[:id]}"
+    end
   end
 end

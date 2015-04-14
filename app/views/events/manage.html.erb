@@ -29,7 +29,7 @@
 		          <td><%= f.text_field :description, :value => event.description, class: 'form-control' %></td>
 		          <td><%= f.text_field :edatetime, :value => event.edatetime, class: 'form-control datetimepicker' %></td>
 		          <td><%= f.text_field :location, :value => event.location, class: 'form-control' %></td>
-		          <td><%= f.check_box :public, :value => event.is_public_e %></td>		       
+		          <td><%= f.check_box :public, :checked => event.is_public_e %></td>		       
 		          <td>
 		          	<%= f.submit "Save", class: "btn btn-primary" %>
 		          </td>

@@ -31,7 +31,7 @@ Rails.application.routes.draw do
 
   # Events routes
   get 'events/index'
-  post 'events/edit', to: 'events#edit'
+  post 'events/:id/edit', to: 'events#edit'
   get 'events/manage'
   get 'events/:id/new', to: 'events#new'
   get 'events/hub/:id', to: 'events#hub'
