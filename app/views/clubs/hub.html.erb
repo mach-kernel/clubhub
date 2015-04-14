@@ -113,7 +113,9 @@
         <% end %>
         </tbody>
       </table>
-      <%= link_to "Create Event", {:action => "new", :controller => "events"}, :class => "btn btn-primary", :method => :get %>
+      <% unless validate_user == :not_logged_in -%>
+        <%= link_to "Create Event", {:action => "new", :controller => "events"}, :class => "btn btn-primary", :method => :get %>
+      <% end -%>
       <% if validate_user == :clubadmin or validate_user == :superuser or local_club_admin? -%>
         <%= link_to "Edit Events", {:action => "manage", :controller => "events", :id => @club.clubid}, :class => "btn btn-warning", :method => :get %>  
       <% end -%>
@@ -133,7 +135,6 @@
           <tr>
             <th>Username</th>
             <th>Comment</th>
-            <th></th>
           </tr>
         </thead>
         <tbody>

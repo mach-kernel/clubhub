@@ -133,8 +133,8 @@ class ClubsController < ApplicationController
       flash[:error] = "You have arrived here in error. It's probably your fault."
       redirect_to '/clubs/index'
     end
-    if validate_user != :superuser && validate_user != :clubadmin && local_club_admin?
-      flash[:error] = "You are not clever at all."
+    if validate_user != :superuser && validate_user != :clubadmin && !local_club_admin?
+      flash[:error] = "You are not clever at all. #{local_club_admin?}"
       redirect_to "/clubs/hub/#{params[:id]}"
     else
       student = params[:student]
@@ -151,7 +151,7 @@ class ClubsController < ApplicationController
       flash[:error] = "You have arrived here in error. It's probably your fault."
       redirect_to '/clubs/index'
     end
-    if validate_user != :superuser && validate_user != :clubadmin && local_club_admin?
+    if validate_user != :superuser && validate_user != :clubadmin && !local_club_admin?
       flash[:error] = "You are not clever at all."
       redirect_to "/clubs/hub/#{params[:id]}"
     else
@@ -168,7 +168,7 @@ class ClubsController < ApplicationController
   end
 
   def edit
-    if validate_user != :superuser && validate_user != :clubadmin && local_club_admin?
+    if validate_user != :superuser && validate_user != :clubadmin && !local_club_admin?
       flash[:error] = "You are not clever at all."
       redirect_to "/"
     else

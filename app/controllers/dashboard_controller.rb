@@ -1,5 +1,13 @@
 class DashboardController < ApplicationController
+
+  require 'fortune_gem'
+
   def index
+    @fortune = FortuneGem.give_fortune({:max_length => 200})
+    @clubs = Club.count
+    @comments = Comment.count
+    @users = Person.count
+    @events = Event.count
   end
 
   def admin

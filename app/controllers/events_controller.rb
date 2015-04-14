@@ -1,9 +1,11 @@
 class EventsController < ApplicationController
   def index
-  	@all_events = Event.find_by_sql("SELECT * FROM event WHERE eid NOT IN (SELECT eid from sign_up WHERE pid = '#{session[:person]['pid']}')")
 
   	unless validate_user == :not_logged_in
+      @all_events = Event.find_by_sql("SELECT * FROM event WHERE eid NOT IN (SELECT eid from sign_up WHERE pid = '#{session[:person]['pid']}')")
       @my_events = Event.find_by_sql("SELECT * FROM event WHERE eid IN (SELECT eid from sign_up WHERE pid = '#{session[:person]['pid']}')")
+    else
+      @all_events = Event.find_by_sql("SELECT * FROM event")
     end
   end
 
