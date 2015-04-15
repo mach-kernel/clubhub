@@ -49,3 +49,6 @@ gem 'datetimepicker-rails', github: 'zpaulovics/datetimepicker-rails', branch: '
 gem 'simple_form'
 gem 'fortune_gem'
 gem 'execjs'
+
+# Windows fucks this up
+gem 'coffee-script-source', '1.8.0'
