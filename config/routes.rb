@@ -39,7 +39,7 @@ Rails.application.routes.draw do
   post 'events/:id/create', to: 'events#create'
   post 'events/hub/:id/addcomment', to: 'events#addcomment'
   get 'events/:id/rsvp', to:'events#rsvp'
-  get 'events/:id/leave', to:'events#leave'
+  post 'events/:id/leave', to:'events#leave'
 
 
   # The priority is based upon order of creation: first created -> highest priority.

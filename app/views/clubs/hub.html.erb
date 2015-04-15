@@ -61,7 +61,7 @@
             </thead>
             <tbody>
               <% @advisors.each do |advisor| %>
-              <%= form_for(:advisor, :url => {:controller => 'clubs', :action => 'drop_advisor'}) do |f| %>
+              <%= form_for(:advisor, :url => {:controller => 'clubs', :action => 'drop_advisors'}) do |f| %>
               <tr>
                 <td>
                   <%= "#{advisor.fname} #{advisor.lname}" %>
@@ -99,6 +99,7 @@
             <th>When</th>
             <th>Where?</th>
             <th>Public?</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -109,6 +110,7 @@
             <td><%= event.edatetime %></td>
             <td><%= event.location %></td>
             <td><%= event.is_public_e %></td>
+            <td><%= link_to "Visit Hub", {:action => "hub", :controller => "events", :id => event.eid}, :class => "btn btn-xs btn-success", :method => :get %></td>
           </tr>
         <% end %>
         </tbody>

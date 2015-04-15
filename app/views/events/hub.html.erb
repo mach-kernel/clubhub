@@ -16,7 +16,7 @@
             </thead>
             <tbody>
               <% @attending.each do |student| %>
-                <%= form_for(:student, :url => {:controller => 'clubs', :action => 'drop_students'}) do |f| %>
+                <%= form_for(:student, :url => {:controller => 'events', :action => 'leave'}) do |f| %>
                 <tr>
                   <td>
                     <%= "#{student.fname} #{student.lname}" %>
@@ -36,6 +36,9 @@
       </div>
       </div>
     <div class="col-md-9">
+    <% unless validate_user == :not_logged_in || @amRSVP -%>
+      <%= link_to "RSVP", {:action => "rsvp", :controller => "events"}, :class => "btn btn-lg btn-block btn-primary", :method => :get %>
+    <% end -%>
       <h3 class="page-header">Forum</h3>
       <% unless validate_user == :not_logged_in -%>
         <h4>Add a comment</h4>

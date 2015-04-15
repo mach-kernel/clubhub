@@ -29,6 +29,10 @@ class EventsController < ApplicationController
 
     @attending = Person.find_by_sql("SELECT * FROM person WHERE pid IN (SELECT pid from sign_up WHERE eid = '#{params[:id]}')")
 
+    unless validate_user == :not_logged_in
+      @amRSVP = Person.find_by_sql("SELECT * FROM person WHERE pid IN (SELECT pid from sign_up WHERE eid = '#{params[:id]}' AND pid = '#{session[:person]['pid']}')").size > 0
+    end
+    
     @public_comments = Comment.find_by_sql("SELECT * FROM comment WHERE comment_id IN (SELECT comment_id FROM event_comment WHERE eid = '#{@event.eid}') AND is_public_c = 1")
     @all_comments = Comment.find_by_sql("SELECT * FROM comment WHERE comment_id IN (SELECT comment_id FROM event_comment WHERE eid = '#{@event.eid}')")
   end

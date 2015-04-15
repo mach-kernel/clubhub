@@ -115,13 +115,13 @@ class ClubsController < ApplicationController
 
     advisor = params[:advisor]
     
-    check_advisors = Person.find_by_sql("SELECT * from person WHERE pid IN (SELECT pid FROM advisor WHERE pid = '#{student[:pid]}')")
+    check_advisors = Person.find_by_sql("SELECT * from person WHERE pid IN (SELECT pid FROM advisor WHERE pid = '#{advisor[:pid]}')")
 
-    if check_students.length < 1
+    if check_advisors.length < 1
       flash[:error] = "Username not found. Try again."
       redirect_to "/clubs/hub/#{params[:id]}"
     else
-      ActiveRecord::Base.connection.execute("INSERT INTO advisor_of (pid, clubid) VALUES ('#{student[:pid]}', '#{params[:id]}') ")
+      ActiveRecord::Base.connection.execute("INSERT INTO advisor_of (pid, clubid) VALUES ('#{advisor[:pid]}', '#{params[:id]}') ")
 
       flash[:notice] = "Advisor added successfully!"
       redirect_to "/clubs/hub/#{params[:id]}"
