@@ -25,10 +25,17 @@ class ClubsController < ApplicationController
     
     # This sucks but I don't want to tokenize a large query string and I won't get fired for doing this so why not
     @students.each do |student|
-      student.role = Role_in.find_by_sql("SELECT * FROM role_in WHERE pid = '#{student.pid}' AND clubid = '#{params[:id]}'").first.role
+      roles = Role_in.find_by_sql("SELECT * FROM role_in WHERE pid = '#{student.pid}' AND clubid = '#{params[:id]}'")
+      unless roles.empty?
+        student.role = roles.first.role
+      end
     end
 
-    @club_events = Event.find_by_sql("SELECT * FROM event WHERE sponsored_by = '#{params[:id]}'")
+    if validate_user == :not_logged_in
+      @club_events = Event.find_by_sql("SELECT * FROM event WHERE sponsored_by = '#{params[:id]}' AND is_public_e = true")
+    else
+      @club_events = Event.find_by_sql("SELECT * FROM event WHERE sponsored_by = '#{params[:id]}'")
+    end
 
     @advisors = Person.find_by_sql("SELECT * FROM person WHERE pid IN (SELECT pid from advisor_of WHERE clubid = '#{@club.clubid}')")
 
